@@ -6,6 +6,8 @@ import { CreateArtistDto } from 'src/artists/dto/create-artist.dto';
 import { UpdateArtistDto } from 'src/artists/dto/update-artist.dto';
 import { Artist } from 'src/artists/entities/artist.entity';
 import { Fav } from 'src/favs/entities/fav.entity';
+import { CreateTrackDto } from 'src/tracks/dto/create-track.dto';
+import { UpdateTrackDto } from 'src/tracks/dto/update-track.dto';
 import { Track } from 'src/tracks/entities/track.entity';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { User } from 'src/users/entities/user.entity';
@@ -138,5 +140,39 @@ export class DbService {
 
   findAllTracks() {
     return this.tracks;
+  }
+  findOneTrack(id: string) {
+    const track = this.tracks.find((track) => track.id === id);
+    if (track) {
+      return track;
+    } else {
+      return null;
+    }
+  }
+  createTrack(data: CreateTrackDto) {
+    const newTrack = new Track({ id: uuidv4(), ...data });
+    this.tracks.push(newTrack);
+    return newTrack;
+  }
+  removeTrack(id: string) {
+    const indexTrack = this.tracks.findIndex((track) => track.id === id);
+    if (indexTrack !== -1) {
+      this.tracks.splice(indexTrack, 1);
+      return true;
+    }
+    return false;
+  }
+  updateTrack(id: string, updateDto: UpdateTrackDto) {
+    const indexTrack = this.tracks.findIndex((track) => track.id === id);
+
+    if (indexTrack !== -1) {
+      const currentTrack = this.tracks[indexTrack];
+      currentTrack.name = updateDto.name;
+      currentTrack.duration = updateDto.duration;
+      currentTrack.artistId = updateDto.artistId;
+      currentTrack.albumId = updateDto.albumId;
+      return currentTrack;
+    }
+    return null;
   }
 }
