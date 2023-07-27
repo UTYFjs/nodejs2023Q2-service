@@ -9,27 +9,33 @@ import {
   NotFoundException,
   HttpStatus,
   HttpCode,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+  ParseIntPipe,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Body() createUserDto: CreateUserDto): User {
     return this.usersService.create(createUserDto);
   }
-
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  findAll() {
+  findAll(): User[] {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseUUIDPipe) id: string): User {
     const user = this.usersService.findOne(id);
     if (!user) {
       throw new NotFoundException('user not found');
@@ -38,13 +44,16 @@ export class UsersController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    this.usersService.update(id, updateUserDto);
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     this.usersService.remove(id);
   }
 }

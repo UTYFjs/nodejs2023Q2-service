@@ -27,8 +27,8 @@ export class UsersService {
       updatedAt: Date.now(),
     };
     console.log(newUser);
-    this.dbService.createUser(newUser);
-    return newUser;
+    const createdUser = this.dbService.createUser(newUser);
+    return createdUser;
   }
 
   findAll() {
@@ -54,11 +54,11 @@ export class UsersService {
     if (user.password !== updateUserDto.oldPassword) {
       throw new ForbiddenException('wrong old password');
     }
-    const isUpdate = this.dbService.updateUser(id, updateUserDto);
-    if (!isUpdate) {
+    const updatedUser = this.dbService.updateUser(id, updateUserDto);
+    if (!updatedUser) {
       throw new InternalServerErrorException('somethig went wrong');
     }
-    return isUpdate;
+    return updatedUser;
     return `This action updates a #${id} user`;
   }
 

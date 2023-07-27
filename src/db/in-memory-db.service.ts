@@ -30,7 +30,9 @@ export class DbService {
     }
   }
   createUser(user: User) {
-    this.users.push(user);
+    const newUser = new User({ ...user });
+    this.users.push(newUser);
+    return newUser;
   }
   removeUser(id: string) {
     const indexUser = this.users.findIndex((user) => user.id === id);
@@ -47,10 +49,13 @@ export class DbService {
       indexUser !== -1 &&
       updateDto.oldPassword === this.users[indexUser].password
     ) {
-      this.users[indexUser].password = updateDto.newPassword;
-      return true;
+      const currentUser = this.users[indexUser];
+      currentUser.password = updateDto.newPassword;
+      currentUser.version += 1;
+      currentUser.updatedAt = Date.now();
+      return currentUser;
     }
-    return false;
+    return null;
   }
 
   findAllArtists() {
