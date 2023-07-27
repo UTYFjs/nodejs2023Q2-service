@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Album } from 'src/albums/entities/album.entity';
+import { CreateArtistDto } from 'src/artists/dto/create-artist.dto';
+import { UpdateArtistDto } from 'src/artists/dto/update-artist.dto';
 import { Artist } from 'src/artists/entities/artist.entity';
 import { Fav } from 'src/favs/entities/fav.entity';
 import { Track } from 'src/tracks/entities/track.entity';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { User } from 'src/users/entities/user.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class DbService {
@@ -61,6 +64,39 @@ export class DbService {
   findAllArtists() {
     return this.artists;
   }
+  findOneArtist(id: string) {
+    const artist = this.artists.find((user) => user.id === id);
+    if (artist) {
+      return artist;
+    } else {
+      return null;
+    }
+  }
+  createArtist(data: CreateArtistDto) {
+    const newArtist = new Artist({ ...data, id: uuidv4() });
+    this.artists.push(newArtist);
+    return newArtist;
+  }
+  removeArtist(id: string) {
+    const indexArtist = this.artists.findIndex((user) => user.id === id);
+    if (indexArtist !== -1) {
+      this.artists.splice(indexArtist, 1);
+      return true;
+    }
+    return false;
+  }
+  updateArtist(id: string, updateDto: UpdateArtistDto) {
+    const indexArtist = this.artists.findIndex((artist) => artist.id === id);
+
+    if (indexArtist !== -1) {
+      const currentArtist = this.artists[indexArtist];
+      currentArtist.name = updateDto.name;
+      currentArtist.grammy = updateDto.grammy;
+      return currentArtist;
+    }
+    return null;
+  }
+
   findAllAlbums() {
     return this.albums;
   }

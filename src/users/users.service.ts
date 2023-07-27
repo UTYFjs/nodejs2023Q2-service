@@ -1,16 +1,11 @@
 import {
-  BadRequestException,
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
-  NotAcceptableException,
   NotFoundException,
-  UnauthorizedException,
-  UnprocessableEntityException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { DbModule } from 'src/db/db.module';
 import { DbService } from 'src/db/in-memory-db.service';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -59,7 +54,6 @@ export class UsersService {
       throw new InternalServerErrorException('somethig went wrong');
     }
     return updatedUser;
-    return `This action updates a #${id} user`;
   }
 
   remove(id: string) {

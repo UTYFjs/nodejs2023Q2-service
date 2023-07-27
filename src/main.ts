@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 4000;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
-  //app.useGlobalInterceptors(new ClassSerializerInterceptor());
+  //app.useGlobalInterceptors([new ClassSerializerInterceptor()]);
   await app.listen(PORT);
 }
 bootstrap();
