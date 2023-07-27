@@ -1,26 +1,55 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { DbService } from 'src/db/in-memory-db.service';
 
 @Injectable()
 export class AlbumsService {
+  constructor(private readonly db: DbService) {}
   create(createAlbumDto: CreateAlbumDto) {
-    return 'This action adds a new album';
+    const createdAlbum = this.db.createAlbum(createAlbumDto);
+    return createdAlbum;
   }
 
   findAll() {
-    return `This action returns all albums`;
+    const allAlbums = this.db.findAllAlbums();
+    return allAlbums;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} album`;
+  findOne(id: string) {
+    const album = this.db.findOneAlbum(id);
+    if (!album) {
+      throw new NotFoundException('album is not found');
+    }
+
+    return album;
   }
 
-  update(id: number, updateAlbumDto: UpdateAlbumDto) {
-    return `This action updates a #${id} album`;
+  update(id: string, updateAlbumDto: UpdateAlbumDto) {
+    const album = this.db.findOneAlbum(id);
+    if (!album) {
+      throw new NotFoundException('album is not found');
+    }
+    const updatedAlbum = this.db.updateAlbum(id, updateAlbumDto);
+    if (!updatedAlbum) {
+      throw new InternalServerErrorException('something went wrong');
+    }
+    return updatedAlbum;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} album`;
+  remove(id: string) {
+    const album = this.db.findOneAlbum(id);
+    if (!album) {
+      throw new NotFoundException('album is not found');
+    }
+    const isRemoved = this.db.removeAlbum(id);
+    if (!isRemoved) {
+      throw new InternalServerErrorException('something went wrong');
+    }
+    return;
   }
 }

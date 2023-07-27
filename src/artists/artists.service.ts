@@ -6,15 +6,11 @@ import {
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { DbService } from 'src/db/in-memory-db.service';
-import { v4 as uuidv4 } from 'uuid';
-import { Artist } from './entities/artist.entity';
 
 @Injectable()
 export class ArtistsService {
   constructor(private readonly Db: DbService) {}
   create(createArtistDto: CreateArtistDto) {
-    const newArtist1 = new Artist({ ...createArtistDto, id: uuidv4() });
-
     const newArtist = this.Db.createArtist(createArtistDto);
     return newArtist;
   }

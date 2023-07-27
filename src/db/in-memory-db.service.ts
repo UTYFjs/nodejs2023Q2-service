@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { CreateAlbumDto } from 'src/albums/dto/create-album.dto';
+import { UpdateAlbumDto } from 'src/albums/dto/update-album.dto';
 import { Album } from 'src/albums/entities/album.entity';
 import { CreateArtistDto } from 'src/artists/dto/create-artist.dto';
 import { UpdateArtistDto } from 'src/artists/dto/update-artist.dto';
@@ -100,6 +102,40 @@ export class DbService {
   findAllAlbums() {
     return this.albums;
   }
+  findOneAlbum(id: string) {
+    const album = this.albums.find((album) => album.id === id);
+    if (album) {
+      return album;
+    } else {
+      return null;
+    }
+  }
+  createAlbum(data: CreateAlbumDto) {
+    const newAlbum = new Album({ id: uuidv4(), ...data });
+    this.albums.push(newAlbum);
+    return newAlbum;
+  }
+  removeAlbum(id: string) {
+    const indexAlbum = this.albums.findIndex((album) => album.id === id);
+    if (indexAlbum !== -1) {
+      this.albums.splice(indexAlbum, 1);
+      return true;
+    }
+    return false;
+  }
+  updateAlbum(id: string, updateDto: UpdateAlbumDto) {
+    const indexAlbum = this.albums.findIndex((album) => album.id === id);
+
+    if (indexAlbum !== -1) {
+      const currentAlbum = this.albums[indexAlbum];
+      currentAlbum.name = updateDto.name;
+      currentAlbum.year = updateDto.year;
+      currentAlbum.artistId = updateDto.artistId;
+      return currentAlbum;
+    }
+    return null;
+  }
+
   findAllTracks() {
     return this.tracks;
   }
