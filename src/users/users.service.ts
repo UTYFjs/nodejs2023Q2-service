@@ -1,30 +1,77 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+  NotAcceptableException,
+  NotFoundException,
+  UnauthorizedException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { DbModule } from 'src/db/db.module';
 import { DbService } from 'src/db/in-memory-db.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
-  private readonly usersDto = [];
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(private readonly dbService: DbService) {}
+  create(dto: CreateUserDto) {
+    const newUser = {
+      id: uuidv4(),
+      login: dto.login,
+      password: dto.password,
+      version: 1,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
+    console.log(newUser);
+    this.dbService.createUser(newUser);
+    return newUser;
   }
 
   findAll() {
-    //DbService;
-    return this.usersDto;
+    return this.dbService.findAllUsers();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findOne(id: string) {
+    console.log('id ---> ', id);
+    const user = this.dbService.findOneUser(id);
+    if (!user) {
+      return null;
+      //return 'Hello , no user';
+    }
+    return user;
+    //return `This action returns a #${id} user`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  update(id: string, updateUserDto: UpdateUserDto) {
+    const user = this.dbService.findOneUser(id);
+    if (!user) {
+      throw new NotFoundException(' user not found');
+    }
+    if (user.password !== updateUserDto.oldPassword) {
+      throw new ForbiddenException('wrong old password');
+    }
+    const isUpdate = this.dbService.updateUser(id, updateUserDto);
+    if (!isUpdate) {
+      throw new InternalServerErrorException('somethig went wrong');
+    }
+    return isUpdate;
     return `This action updates a #${id} user`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: string) {
+    const user = this.dbService.findOneUser(id);
+    if (!user) {
+      throw new NotFoundException(' user not found');
+    }
+
+    const isRemove = this.dbService.removeUser(id);
+    if (!isRemove) {
+      throw new InternalServerErrorException('somethig went wrong');
+    }
+    return;
   }
 }
