@@ -17,7 +17,6 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
 import { StatusCodes } from 'http-status-codes';
 
-@UseInterceptors(ClassSerializerInterceptor)
 @Controller('album')
 export class AlbumsController {
   constructor(private readonly albumsService: AlbumsService) {}
