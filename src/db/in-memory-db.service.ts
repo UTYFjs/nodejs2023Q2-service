@@ -5,7 +5,7 @@ import { Album } from 'src/albums/entities/album.entity';
 import { CreateArtistDto } from 'src/artists/dto/create-artist.dto';
 import { UpdateArtistDto } from 'src/artists/dto/update-artist.dto';
 import { Artist } from 'src/artists/entities/artist.entity';
-import { Fav } from 'src/favs/entities/fav.entity';
+
 import { CreateTrackDto } from 'src/tracks/dto/create-track.dto';
 import { UpdateTrackDto } from 'src/tracks/dto/update-track.dto';
 import { Track } from 'src/tracks/entities/track.entity';

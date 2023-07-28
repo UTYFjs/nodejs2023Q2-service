@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { DbService } from 'src/db/in-memory-db.service';
 import { ArtistsService } from 'src/artists/artists.service';
-import { Request } from 'express';
 import { AlbumsService } from 'src/albums/albums.service';
 import { TracksService } from 'src/tracks/tracks.service';
 import { CategoryType } from './entities/fav.entity';
