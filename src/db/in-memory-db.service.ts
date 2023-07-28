@@ -19,10 +19,10 @@ export class DbService {
   readonly artists: Artist[] = [];
   readonly albums: Album[] = [];
   readonly tracks: Track[] = [];
-  readonly favorites: Fav = {
-    artists: [],
-    albums: [],
-    tracks: [],
+  readonly favs: Fav = {
+    artist: [],
+    album: [],
+    track: [],
   };
 
   findAllUsers() {
@@ -174,5 +174,24 @@ export class DbService {
       return currentTrack;
     }
     return null;
+  }
+  createFavEntity(category: 'artist' | 'album' | 'track', id: string) {
+    this.favs[category].push(id);
+    return;
+  }
+  findAllFavsId() {
+    return this.favs;
+  }
+
+  findOneFavId(category: 'artist' | 'album' | 'track', id: string) {
+    return this.favs[category].find((favId) => favId === id);
+  }
+  removeFav(category: 'artist' | 'album' | 'track', id: string) {
+    const indexFav = this.favs[category].findIndex((favId) => favId === id);
+    if (indexFav !== -1) {
+      this.favs[category].splice(indexFav, 1);
+      return true;
+    }
+    return false;
   }
 }

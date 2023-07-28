@@ -1,15 +1,22 @@
 import {
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { DbService } from 'src/db/in-memory-db.service';
+import { FavsService } from 'src/favs/favs.service';
 
 @Injectable()
 export class TracksService {
-  constructor(private readonly db: DbService) {}
+  constructor(
+    @Inject(forwardRef(() => FavsService))
+    private readonly favsService: FavsService,
+    private readonly db: DbService,
+  ) {}
   create(createTrackDto: CreateTrackDto) {
     const createdTrack = this.db.createTrack(createTrackDto);
     return createdTrack;
@@ -49,6 +56,18 @@ export class TracksService {
     if (!isRemoved) {
       throw new InternalServerErrorException('something went wrong');
     }
+    /*const isFavs = this.favsService.findOne('track', id);
+    if (isFavs) {
+      this.favsService.remove('track', id);
+    }*/
+    try {
+      this.favsService.remove('track', id);
+    } catch (err) {}
+
     return;
+  }
+  isExist(id: string) {
+    const track = this.db.findOneTrack(id);
+    return track ? true : false;
   }
 }

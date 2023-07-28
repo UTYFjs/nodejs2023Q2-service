@@ -1,15 +1,22 @@
 import {
   Injectable,
+  Inject,
   InternalServerErrorException,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { DbService } from 'src/db/in-memory-db.service';
+import { FavsService } from 'src/favs/favs.service';
 
 @Injectable()
 export class ArtistsService {
-  constructor(private readonly Db: DbService) {}
+  constructor(
+    @Inject(forwardRef(() => FavsService))
+    private readonly favsService: FavsService,
+    private readonly Db: DbService,
+  ) {}
   create(createArtistDto: CreateArtistDto) {
     const newArtist = this.Db.createArtist(createArtistDto);
     return newArtist;
@@ -25,6 +32,7 @@ export class ArtistsService {
     if (!artist) {
       throw new NotFoundException('artist is not found');
     }
+    //console.log('aRTIST', artist);
     return artist;
   }
 
@@ -43,10 +51,18 @@ export class ArtistsService {
       throw new NotFoundException('artist is not found');
     }
     const isRemove = this.Db.removeArtist(id);
-    if (!isRemove) {
+    /*if (!isRemove) {
       throw new InternalServerErrorException('something went wrong');
-    }
+    }*/
+
+    try {
+      this.favsService.remove('artist', id);
+    } catch (err) {}
 
     return;
+  }
+  isExist(id: string) {
+    const artist = this.Db.findOneArtist(id);
+    return artist ? true : false;
   }
 }

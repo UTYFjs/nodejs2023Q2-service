@@ -2,41 +2,52 @@ import {
   Controller,
   Get,
   Post,
-  Body,
-  Put,
   Param,
   Delete,
+  ParseUUIDPipe,
+  Req,
+  HttpCode,
 } from '@nestjs/common';
 import { FavsService } from './favs.service';
-import { CreateFavDto } from './dto/create-fav.dto';
-import { UpdateFavDto } from './dto/update-fav.dto';
+import { Request } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { CategoryType } from './entities/fav.entity';
+//import { UpdateFavDto } from './dto/update-fav.dto';
 
 @Controller('favs')
 export class FavsController {
   constructor(private readonly favsService: FavsService) {}
-
-  @Post()
-  create(@Body() createFavDto: CreateFavDto) {
-    return this.favsService.create(createFavDto);
-  }
 
   @Get()
   findAll() {
     return this.favsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.favsService.findOne(+id);
+  @Post(['artist/:id', 'track/:id', 'album/:id'])
+  createFavAtrist(
+    @Param('id', ParseUUIDPipe)
+    id: string,
+    @Req()
+    request: Request,
+  ) {
+    const category = this.parseCategory(request);
+    return this.favsService.createFav(category, id);
+  }
+  @Delete(['artist/:id', 'track/:id', 'album/:id'])
+  @HttpCode(StatusCodes.NO_CONTENT)
+  removeFav(@Param('id', ParseUUIDPipe) id: string, @Req() request: Request) {
+    const category = this.parseCategory(request);
+    return this.favsService.remove(category, id);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateFavDto: UpdateFavDto) {
-    return this.favsService.update(+id, updateFavDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.favsService.remove(+id);
+  private parseCategory(request: Request): CategoryType {
+    const url = request.url;
+    const arrUrl = url.split('/');
+    const category = arrUrl[arrUrl.length - 2];
+    /*if (category === 'artist' || 'album' || 'track') {
+      return category as CategoryType;
+    }
+    return null;*/
+    return category as CategoryType;
   }
 }

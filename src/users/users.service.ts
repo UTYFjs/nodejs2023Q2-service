@@ -21,7 +21,6 @@ export class UsersService {
       createdAt: Date.now(),
       updatedAt: Date.now(),
     };
-    console.log(newUser);
     const createdUser = this.dbService.createUser(newUser);
     return createdUser;
   }
@@ -31,7 +30,6 @@ export class UsersService {
   }
 
   findOne(id: string) {
-    console.log('id ---> ', id);
     const user = this.dbService.findOneUser(id);
     if (!user) {
       return null;

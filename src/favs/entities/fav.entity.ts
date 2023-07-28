@@ -1,5 +1,7 @@
 export class Fav {
-  artists: string[];
-  albums: string[];
-  tracks: string[];
+  artist: string[];
+  album: string[];
+  track: string[];
 }
+
+export type CategoryType = 'artist' | 'album' | 'track';

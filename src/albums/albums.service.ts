@@ -1,15 +1,22 @@
 import {
   Injectable,
+  Inject,
   InternalServerErrorException,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { DbService } from 'src/db/in-memory-db.service';
+import { FavsService } from 'src/favs/favs.service';
 
 @Injectable()
 export class AlbumsService {
-  constructor(private readonly db: DbService) {}
+  constructor(
+    @Inject(forwardRef(() => FavsService))
+    private readonly favsService: FavsService,
+    private readonly db: DbService,
+  ) {}
   create(createAlbumDto: CreateAlbumDto) {
     const createdAlbum = this.db.createAlbum(createAlbumDto);
     return createdAlbum;
@@ -50,6 +57,15 @@ export class AlbumsService {
     if (!isRemoved) {
       throw new InternalServerErrorException('something went wrong');
     }
+
+    try {
+      this.favsService.remove('album', id);
+    } catch (err) {}
+
     return;
+  }
+  isExist(id: string) {
+    const album = this.db.findOneAlbum(id);
+    return album ? true : false;
   }
 }
