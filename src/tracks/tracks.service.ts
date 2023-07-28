@@ -52,6 +52,9 @@ export class TracksService {
     if (!currentTrack) {
       throw new NotFoundException('track is not found');
     }
+    try {
+      this.favsService.remove('track', id);
+    } catch (err) {}
     const isRemoved = this.db.removeTrack(id);
     if (!isRemoved) {
       throw new InternalServerErrorException('something went wrong');
@@ -60,14 +63,23 @@ export class TracksService {
     if (isFavs) {
       this.favsService.remove('track', id);
     }*/
-    try {
-      this.favsService.remove('track', id);
-    } catch (err) {}
 
     return;
   }
   isExist(id: string) {
     const track = this.db.findOneTrack(id);
     return track ? true : false;
+  }
+  removeAlbumId(albumId: string) {
+    const tracks = this.db.findAllTracks();
+    const selectedTracks = tracks.filter((track) => track.albumId === albumId);
+    selectedTracks.forEach((track) => (track.albumId = null));
+  }
+  removeArtistId(artistId: string) {
+    const tracks = this.db.findAllTracks();
+    const selectedTracks = tracks.filter(
+      (track) => track.artistId === artistId,
+    );
+    selectedTracks.forEach((track) => (track.artistId = null));
   }
 }

@@ -25,6 +25,7 @@ export class FavsService {
   ) {}
   findAll() {
     const allFavsId = this.db.findAllFavsId();
+    console.log('ALL FAVS ID', allFavsId);
     const allFavs = { artists: [], albums: [], tracks: [] };
     for (const category in allFavsId) {
       allFavsId[category].forEach((id) => {
@@ -67,11 +68,11 @@ export class FavsService {
     if (!entity) {
       throw new UnprocessableEntityException();
     }
-    const isFav = this.findOne(category, id);
-    if (!isFav) {
-      throw new NotFoundException(`this ${category} is not in favorites`);
+
+    const isRemoved = this.db.removeFav(category, id);
+    if (!isRemoved) {
+      throw new NotFoundException(`this ${category} is not favorite`);
     }
-    this.db.removeFav(category, id);
     return `This action removes a #${id} fav`;
   }
 
@@ -91,16 +92,5 @@ export class FavsService {
         entity = null;
     }
     return entity;
-  }
-
-  private parseCategory(request: Request): CategoryType {
-    const url = request.url;
-    const arrUrl = url.split('/');
-    const category = arrUrl[arrUrl.length - 2];
-    /*if (category === 'artist' || 'album' || 'track') {
-      return category as CategoryType;
-    }
-    return null;*/
-    return category as CategoryType;
   }
 }
