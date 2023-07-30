@@ -1,26 +1,41 @@
 # Home Library Service
-
+ This is Home Music Library service application with Node.js
+ Created with: 
+ Node.js 18 LTS
+ NestJS 8.0
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
 
-## Downloading
+## Setup
+
+1. clone this repository
+```
+git clone https://github.com/UTYFjs/nodejs2023Q2-service.git
 
 ```
-git clone {repository URL}
+2. Move to develop branch
+```
+git checkout develop
 ```
 
-## Installing NPM modules
+3. Copy `.env.example` file in root of the project and rename to `.env`
 
+4. Install dependency
 ```
 npm install
 ```
 
+
 ## Running application
 
 ```
-npm start
+npm run start
+```
+Run dev mode
+```
+npm run start:dev
 ```
 
 After starting the app on port (4000 as default) you can open
