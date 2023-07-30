@@ -11,6 +11,7 @@ import { DbService } from 'src/db/in-memory-db.service';
 import { FavsService } from 'src/favs/favs.service';
 import { AlbumsService } from 'src/albums/albums.service';
 import { TracksService } from 'src/tracks/tracks.service';
+import { ArtistConstants } from 'src/constants/constants';
 
 @Injectable()
 export class ArtistsService {
@@ -36,7 +37,7 @@ export class ArtistsService {
   findOne(id: string) {
     const artist = this.Db.findOneArtist(id);
     if (!artist) {
-      throw new NotFoundException('artist is not found');
+      throw new NotFoundException(ArtistConstants.NOT_FOUND_MESSAGE);
     }
     //console.log('aRTIST', artist);
     return artist;
@@ -45,7 +46,7 @@ export class ArtistsService {
   update(id: string, updateArtistDto: UpdateArtistDto) {
     const artist = this.Db.findOneArtist(id);
     if (!artist) {
-      throw new NotFoundException(' artist is not found');
+      throw new NotFoundException(ArtistConstants.NOT_FOUND_MESSAGE);
     }
     const updatedArtist = this.Db.updateArtist(id, updateArtistDto);
     return updatedArtist;
@@ -54,7 +55,7 @@ export class ArtistsService {
   remove(id: string) {
     const artist = this.Db.findOneArtist(id);
     if (!artist) {
-      throw new NotFoundException('artist is not found');
+      throw new NotFoundException(ArtistConstants.NOT_FOUND_MESSAGE);
     }
     this.albumsService.removeArtistId(id);
     this.tracksService.removeArtistId(id);

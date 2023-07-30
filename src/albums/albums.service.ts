@@ -10,6 +10,7 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 import { DbService } from 'src/db/in-memory-db.service';
 import { FavsService } from 'src/favs/favs.service';
 import { TracksService } from 'src/tracks/tracks.service';
+import { AlbumConstants } from 'src/constants/constants';
 
 @Injectable()
 export class AlbumsService {
@@ -33,7 +34,7 @@ export class AlbumsService {
   findOne(id: string) {
     const album = this.db.findOneAlbum(id);
     if (!album) {
-      throw new NotFoundException('album is not found');
+      throw new NotFoundException(AlbumConstants.NOT_FOUND_MESSAGE);
     }
 
     return album;
@@ -42,7 +43,7 @@ export class AlbumsService {
   update(id: string, updateAlbumDto: UpdateAlbumDto) {
     const album = this.db.findOneAlbum(id);
     if (!album) {
-      throw new NotFoundException('album is not found');
+      throw new NotFoundException(AlbumConstants.NOT_FOUND_MESSAGE);
     }
     const updatedAlbum = this.db.updateAlbum(id, updateAlbumDto);
     if (!updatedAlbum) {
@@ -54,7 +55,7 @@ export class AlbumsService {
   remove(id: string) {
     const album = this.db.findOneAlbum(id);
     if (!album) {
-      throw new NotFoundException('album is not found');
+      throw new NotFoundException(AlbumConstants.NOT_FOUND_MESSAGE);
     }
     try {
       this.favsService.remove('album', id);

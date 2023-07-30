@@ -8,6 +8,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { DbService } from 'src/db/in-memory-db.service';
 import { v4 as uuidv4 } from 'uuid';
+import { UserConstants } from 'src/constants/constants';
 
 @Injectable()
 export class UsersService {
@@ -42,10 +43,10 @@ export class UsersService {
   update(id: string, updateUserDto: UpdateUserDto) {
     const user = this.dbService.findOneUser(id);
     if (!user) {
-      throw new NotFoundException(' user not found');
+      throw new NotFoundException(UserConstants.NOT_FOUND_MESSAGE);
     }
     if (user.password !== updateUserDto.oldPassword) {
-      throw new ForbiddenException('wrong old password');
+      throw new ForbiddenException(UserConstants.FORBIDDEN_MESSAGE);
     }
     const updatedUser = this.dbService.updateUser(id, updateUserDto);
     if (!updatedUser) {
@@ -57,7 +58,7 @@ export class UsersService {
   remove(id: string) {
     const user = this.dbService.findOneUser(id);
     if (!user) {
-      throw new NotFoundException(' user not found');
+      throw new NotFoundException(UserConstants.NOT_FOUND_MESSAGE);
     }
 
     const isRemove = this.dbService.removeUser(id);

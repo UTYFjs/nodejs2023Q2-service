@@ -45,7 +45,6 @@ export class FavsService {
         }
       });
     }
-    // console.log(allFavs);
     return allFavs;
   }
   findOne(category: CategoryType, id: string) {
@@ -72,7 +71,7 @@ export class FavsService {
     if (!isRemoved) {
       throw new NotFoundException(`this ${category} is not favorite`);
     }
-    return `This action removes a #${id} fav`;
+    return `This Item removes a #${id} fav`;
   }
 
   private isExistEntity(category: string, id: string) {

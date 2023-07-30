@@ -9,6 +9,7 @@ import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { DbService } from 'src/db/in-memory-db.service';
 import { FavsService } from 'src/favs/favs.service';
+import { TrackConstants } from 'src/constants/constants';
 
 @Injectable()
 export class TracksService {
@@ -30,7 +31,7 @@ export class TracksService {
   findOne(id: string) {
     const track = this.db.findOneTrack(id);
     if (!track) {
-      throw new NotFoundException('track is not found');
+      throw new NotFoundException(TrackConstants.NOT_FOUND_MESSAGE);
     }
     return track;
   }
@@ -38,7 +39,7 @@ export class TracksService {
   update(id: string, updateTrackDto: UpdateTrackDto) {
     const track = this.db.findOneTrack(id);
     if (!track) {
-      throw new NotFoundException('track is not found');
+      throw new NotFoundException(TrackConstants.NOT_FOUND_MESSAGE);
     }
     const updatedTrack = this.db.updateTrack(id, updateTrackDto);
     if (!updatedTrack) {
@@ -50,7 +51,7 @@ export class TracksService {
   remove(id: string) {
     const currentTrack = this.db.findOneTrack(id);
     if (!currentTrack) {
-      throw new NotFoundException('track is not found');
+      throw new NotFoundException(TrackConstants.NOT_FOUND_MESSAGE);
     }
     try {
       this.favsService.remove('track', id);
