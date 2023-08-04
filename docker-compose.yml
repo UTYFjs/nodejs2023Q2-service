@@ -14,9 +14,9 @@ services:
     volumes:
       - .:/app
 
-  db:
-    container_name: postgresql
-    image: postgres:15-alpine
+  postgres:
+    container_name: postgres
+    image: docker pull postgres:15.3-alpine3.18
     build: /db
     restart: always
     ports:
