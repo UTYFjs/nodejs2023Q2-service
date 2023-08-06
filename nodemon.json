@@ -1,0 +1,13 @@
+{
+  "ignore": [
+    "node_modules"
+  ],
+  "ext": "ts",
+  "watch": [
+    "./src"
+  ],
+  "exec": "npm run start:dev",
+  "execMap": {
+    "ts": "ts-node"
+  }
+}

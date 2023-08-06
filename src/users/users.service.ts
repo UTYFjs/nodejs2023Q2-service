@@ -9,38 +9,50 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { DbService } from 'src/db/in-memory-db.service';
 import { v4 as uuidv4 } from 'uuid';
 import { UserConstants } from 'src/constants/constants';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly dbService: DbService) {}
-  create(dto: CreateUserDto) {
+  constructor(
+    private readonly dbService: DbService,
+    private readonly prisma: PrismaService,
+  ) {}
+  async create(dto: CreateUserDto) {
     const newUser = {
-      id: uuidv4(),
+      //id: uuidv4(),
       login: dto.login,
       password: dto.password,
-      version: 1,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      //version: 1,
+      //createdAt: Date.now(),
+      //updatedAt: Date.now(),
     };
-    const createdUser = this.dbService.createUser(newUser);
+    const createdUser = await this.prisma.user.create({ data: newUser });
+    //const createdUser = this.dbService.createUser(newUser);
     return createdUser;
   }
 
-  findAll() {
-    return this.dbService.findAllUsers();
+  async findAll() {
+    console.log('Prisma request');
+
+    const users = await this.prisma.user.findMany();
+    const users2 = [...users];
+    return users2;
+    //return this.dbService.findAllUsers();
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
+    const user1 = await this.prisma.user.findUnique({ where: { id: id } });
     const user = this.dbService.findOneUser(id);
-    if (!user) {
+    if (!user1) {
       return null;
       //return 'Hello , no user';
     }
-    return user;
+    return user1;
     //return `This action returns a #${id} user`;
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user1 = await this.prisma.user.findUnique({ where: { id: id } });
     const user = this.dbService.findOneUser(id);
     if (!user) {
       throw new NotFoundException(UserConstants.NOT_FOUND_MESSAGE);

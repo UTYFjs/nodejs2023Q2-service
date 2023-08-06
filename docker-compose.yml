@@ -1,24 +1,13 @@
-version: '3.0'
+version: '3.8'
 
 services:
-  app:
-    container_name: app
-    build: ./
-    restart: always
-    ports:
-      - ${PORT}:${PORT}
-    depends_on:
-      - db
-    networks:
-      - backend
-    volumes:
-      - .:/app
-
   postgres:
     container_name: postgres
-    image: docker pull postgres:15.3-alpine3.18
-    build: /db
+    image: postgres:15.3-alpine3.18
+    build: ./db
     restart: always
+    env_file:
+      - .env
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     environment:
@@ -28,10 +17,25 @@ services:
     networks:
       - backend
     volumes:
-      - pgdata:/var/lib/postgresql/data
-
+      - ./pgdata:/var/lib/postgresql/data
+  app:
+    container_name: app
+    build: ./
+    restart: always
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - postgres
+    environment:
+      PORT: ${PORT}
+      DATABASE_URL: ${DATABASE_URL}
+    networks:
+      - backend
+    volumes:
+      - .:/app
 volumes:
   pgdata:
+  app:
 
 networks:
   backend:

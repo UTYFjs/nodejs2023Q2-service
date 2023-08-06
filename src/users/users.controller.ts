@@ -44,15 +44,16 @@ export class UsersController {
     type: User,
   })
   @ApiBody({ type: CreateUserDto })
-  create(@Body() createUserDto: CreateUserDto): User {
+  create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @ApiOperation({ summary: UserConstants.GET_ALL_SUMMARY })
   @ApiOkResponse({ description: UserConstants.OK_MESSAGE, type: [User] })
   @Get()
-  findAll(): User[] {
-    return this.usersService.findAll();
+  findAll() {
+    const users = this.usersService.findAll();
+    return users;
   }
 
   @Get(':id')
@@ -66,7 +67,7 @@ export class UsersController {
   @ApiOkResponse({ description: UserConstants.OK_MESSAGE, type: User })
   @ApiNotFoundResponse({ description: UserConstants.NOT_FOUND_MESSAGE })
   @ApiBadRequestResponse({ description: UserConstants.BAD_REQUEST_MESSAGE })
-  findOne(@Param('id', ParseUUIDPipe) id: string): User {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     const user = this.usersService.findOne(id);
     if (!user) {
       throw new NotFoundException('user not found');
