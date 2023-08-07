@@ -34,7 +34,6 @@ export class FavsController {
   @ApiOperation({ summary: FavsConstants.GET_ALL_SUMMARY })
   @ApiOkResponse({ description: FavsConstants.OK_MESSAGE, type: Fav })
   async findAll() {
-    console.log(await this.favsService.findAll());
     return await this.favsService.findAll();
   }
 

@@ -98,10 +98,5 @@ export class UsersController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id', ParseUUIDPipe) id: string) {
     await this.usersService.remove(id);
-    //console.log(' success', isSuccess);
-    /*if (!isSuccess) {
-      console.log('not success');
-      throw new NotFoundException(UserConstants.NOT_FOUND_MESSAGE);
-    }*/
   }
 }
