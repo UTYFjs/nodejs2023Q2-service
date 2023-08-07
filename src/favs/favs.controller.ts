@@ -33,8 +33,9 @@ export class FavsController {
   @Get()
   @ApiOperation({ summary: FavsConstants.GET_ALL_SUMMARY })
   @ApiOkResponse({ description: FavsConstants.OK_MESSAGE, type: Fav })
-  findAll() {
-    return this.favsService.findAll();
+  async findAll() {
+    console.log(await this.favsService.findAll());
+    return await this.favsService.findAll();
   }
 
   @Post(['artist/:id', 'track/:id', 'album/:id'])
@@ -57,14 +58,14 @@ export class FavsController {
     required: true,
     description: 'Id',
   })
-  createFavAtrist(
+  async createFavAtrist(
     @Param('id', ParseUUIDPipe)
     id: string,
     @Req()
     request: Request,
   ) {
     const category = this.parseCategory(request);
-    return this.favsService.createFav(category, id);
+    return await this.favsService.createFav(category, id);
   }
   @Delete(['artist/:id', 'track/:id', 'album/:id'])
   @ApiOperation({ summary: FavsConstants.DELETE_SUMMARY })

@@ -12,14 +12,12 @@ datasource db {
 }
 
 model User {
-  id        String     @id @default(uuid())
+  id        String   @id @default(uuid())
   login     String
   password  String
-  version   Int        @default(1)
-  createdAt DateTime   @default(now())
-  updateAt  DateTime   @updatedAt
-  //favoritesId String?
-  favorites Favorites?
+  version   Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Album {
@@ -30,7 +28,7 @@ model Album {
   artist      Artist?    @relation(fields: [artistId], references: [id])
   track       Track[]
   favoritesId String?
-  Favorites   Favorites? @relation(fields: [favoritesId], references: [id], onDelete: SetNull)
+  Favorites   Favorites? @relation(fields: [favoritesId], references: [id], onDelete: Cascade)
 }
 
 model Artist {
@@ -41,7 +39,7 @@ model Artist {
 
   track       Track[]
   favoritesId String?
-  Favorites   Favorites? @relation(fields: [favoritesId], references: [id], onDelete: SetNull)
+  Favorites   Favorites? @relation(fields: [favoritesId], references: [id], onDelete: Cascade)
 }
 
 model Track {
@@ -50,10 +48,10 @@ model Track {
   duration    Int
   artistId    String?
   albumId     String?
-  artist      Artist?    @relation(fields: [artistId], references: [id])
-  album       Album?     @relation(fields: [albumId], references: [id])
+  artist      Artist?    @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  album       Album?     @relation(fields: [albumId], references: [id], onDelete: SetNull)
   favoritesId String?
-  Favorites   Favorites? @relation(fields: [favoritesId], references: [id], onDelete: SetNull)
+  Favorites   Favorites? @relation(fields: [favoritesId], references: [id], onDelete: Cascade)
 }
 
 model Favorites {
@@ -61,7 +59,4 @@ model Favorites {
   artists Artist[]
   albums  Album[]
   tracks  Track[]
-
-  User   User   @relation(fields: [userId], references: [id])
-  userId String @unique
 }

@@ -43,16 +43,16 @@ export class ArtistsController {
     type: Artist,
   })
   @ApiBody({ type: CreateArtistDto })
-  create(@Body() createArtistDto: CreateArtistDto): Artist {
-    const newArtist = this.artistsService.create(createArtistDto);
+  async create(@Body() createArtistDto: CreateArtistDto): Promise<Artist> {
+    const newArtist = await this.artistsService.create(createArtistDto);
     return newArtist;
   }
 
   @Get()
   @ApiOperation({ summary: ArtistConstants.GET_ALL_SUMMARY })
   @ApiOkResponse({ description: ArtistConstants.OK_MESSAGE, type: [Artist] })
-  findAll(): Artist[] {
-    return this.artistsService.findAll();
+  async findAll(): Promise<Artist[]> {
+    return await this.artistsService.findAll();
   }
 
   @Get(':id')
@@ -72,8 +72,8 @@ export class ArtistsController {
     description: ArtistConstants.BAD_REQUEST_MESSAGE,
     type: ErrorType,
   })
-  findOne(@Param('id', ParseUUIDPipe) id: string): Artist {
-    return this.artistsService.findOne(id);
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Artist> {
+    return await this.artistsService.findOne(id);
   }
 
   @Put(':id')
@@ -88,11 +88,11 @@ export class ArtistsController {
     type: ErrorType,
   })
   @ApiBody({ type: UpdateArtistDto })
-  update(
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
-  ): Artist {
-    return this.artistsService.update(id, updateArtistDto);
+  ): Promise<Artist> {
+    return await this.artistsService.update(id, updateArtistDto);
   }
 
   @Delete(':id')
@@ -109,7 +109,7 @@ export class ArtistsController {
     type: ErrorType,
   })
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.artistsService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.artistsService.remove(id);
   }
 }

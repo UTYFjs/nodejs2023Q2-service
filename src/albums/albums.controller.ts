@@ -43,15 +43,15 @@ export class AlbumsController {
     type: Album,
   })
   @ApiBody({ type: CreateAlbumDto })
-  create(@Body() createAlbumDto: CreateAlbumDto): Album {
-    return this.albumsService.create(createAlbumDto);
+  async create(@Body() createAlbumDto: CreateAlbumDto): Promise<Album> {
+    return await this.albumsService.create(createAlbumDto);
   }
 
   @Get()
   @ApiOperation({ summary: AlbumConstants.GET_ALL_SUMMARY })
   @ApiOkResponse({ description: AlbumConstants.OK_MESSAGE, type: [Album] })
-  findAll(): Album[] {
-    return this.albumsService.findAll();
+  async findAll(): Promise<Album[]> {
+    return await this.albumsService.findAll();
   }
 
   @Get(':id')
@@ -71,8 +71,8 @@ export class AlbumsController {
     description: AlbumConstants.BAD_REQUEST_MESSAGE,
     type: ErrorType,
   })
-  findOne(@Param('id', ParseUUIDPipe) id: string): Album {
-    return this.albumsService.findOne(id);
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Album> {
+    return await this.albumsService.findOne(id);
   }
 
   @Put(':id')
@@ -87,11 +87,11 @@ export class AlbumsController {
     type: ErrorType,
   })
   @ApiBody({ type: UpdateAlbumDto })
-  update(
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
-  ): Album {
-    return this.albumsService.update(id, updateAlbumDto);
+  ): Promise<Album> {
+    return await this.albumsService.update(id, updateAlbumDto);
   }
 
   @Delete(':id')
@@ -109,7 +109,7 @@ export class AlbumsController {
     type: ErrorType,
   })
   @HttpCode(StatusCodes.NO_CONTENT)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.albumsService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.albumsService.remove(id);
   }
 }

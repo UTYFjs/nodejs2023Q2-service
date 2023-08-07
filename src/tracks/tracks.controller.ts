@@ -43,15 +43,15 @@ export class TracksController {
     type: Track,
   })
   @ApiBody({ type: CreateTrackDto })
-  create(@Body() createTrackDto: CreateTrackDto): Track {
-    return this.tracksService.create(createTrackDto);
+  async create(@Body() createTrackDto: CreateTrackDto): Promise<Track> {
+    return await this.tracksService.create(createTrackDto);
   }
 
   @Get()
   @ApiOperation({ summary: TrackConstants.GET_ALL_SUMMARY })
   @ApiOkResponse({ description: TrackConstants.OK_MESSAGE, type: [Track] })
-  findAll(): Track[] {
-    return this.tracksService.findAll();
+  async findAll(): Promise<Track[]> {
+    return await this.tracksService.findAll();
   }
 
   @Get(':id')
@@ -71,8 +71,8 @@ export class TracksController {
     description: TrackConstants.BAD_REQUEST_MESSAGE,
     type: ErrorType,
   })
-  findOne(@Param('id', ParseUUIDPipe) id: string): Track {
-    return this.tracksService.findOne(id);
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Track> {
+    return await this.tracksService.findOne(id);
   }
 
   @Put(':id')
@@ -87,11 +87,11 @@ export class TracksController {
     type: ErrorType,
   })
   @ApiBody({ type: UpdateTrackDto })
-  update(
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
-  ): Track {
-    return this.tracksService.update(id, updateTrackDto);
+  ): Promise<Track> {
+    return await this.tracksService.update(id, updateTrackDto);
   }
 
   @Delete(':id')
@@ -108,7 +108,7 @@ export class TracksController {
     type: ErrorType,
   })
   @HttpCode(StatusCodes.NO_CONTENT)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.tracksService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.tracksService.remove(id);
   }
 }

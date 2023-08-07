@@ -51,8 +51,8 @@ export class UsersController {
   @ApiOperation({ summary: UserConstants.GET_ALL_SUMMARY })
   @ApiOkResponse({ description: UserConstants.OK_MESSAGE, type: [User] })
   @Get()
-  findAll() {
-    const users = this.usersService.findAll();
+  async findAll(): Promise<User[]> {
+    const users = await this.usersService.findAll();
     return users;
   }
 
@@ -67,8 +67,8 @@ export class UsersController {
   @ApiOkResponse({ description: UserConstants.OK_MESSAGE, type: User })
   @ApiNotFoundResponse({ description: UserConstants.NOT_FOUND_MESSAGE })
   @ApiBadRequestResponse({ description: UserConstants.BAD_REQUEST_MESSAGE })
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    const user = this.usersService.findOne(id);
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+    const user = await this.usersService.findOne(id);
     if (!user) {
       throw new NotFoundException('user not found');
     }
@@ -82,11 +82,12 @@ export class UsersController {
   @ApiForbiddenResponse({ description: UserConstants.FORBIDDEN_MESSAGE })
   @ApiBadRequestResponse({ description: UserConstants.BAD_REQUEST_MESSAGE })
   @ApiBody({ type: UpdateUserDto })
-  update(
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return this.usersService.update(id, updateUserDto);
+    const updatedUser = await this.usersService.update(id, updateUserDto);
+    return updatedUser;
   }
 
   @Delete(':id')
@@ -95,7 +96,12 @@ export class UsersController {
   @ApiNotFoundResponse({ description: UserConstants.NOT_FOUND_MESSAGE })
   @ApiBadRequestResponse({ description: UserConstants.BAD_REQUEST_MESSAGE })
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    this.usersService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    await this.usersService.remove(id);
+    //console.log(' success', isSuccess);
+    /*if (!isSuccess) {
+      console.log('not success');
+      throw new NotFoundException(UserConstants.NOT_FOUND_MESSAGE);
+    }*/
   }
 }
