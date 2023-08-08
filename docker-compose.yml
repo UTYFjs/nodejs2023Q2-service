@@ -6,8 +6,11 @@ services:
     image: postgres:15.3-alpine3.18
     build: ./db
     restart: always
+    command:
+      ['postgres', '-c', 'log_statement=all']
     env_file:
       - .env
+
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     environment:
@@ -18,6 +21,7 @@ services:
       - backend
     volumes:
       - ./pgdata:/var/lib/postgresql/data
+      - ./logs:/var/lib/postgresql/logs
   app:
     container_name: app
     build: ./
@@ -33,9 +37,12 @@ services:
       - backend
     volumes:
       - .:/app
+      - node-modules:/usr/app/node_modules
 volumes:
+  logs:
   pgdata:
   app:
+  node-modules:
 
 networks:
   backend:
