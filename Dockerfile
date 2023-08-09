@@ -1,8 +1,7 @@
-FROM node:18-alpine As production
+FROM node:18-alpine 
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --only=production && npm cache clean --force 
+RUN npm i && npm cache clean --force 
 COPY . .
 EXPOSE ${PORT}
-RUN npx prisma generate
 CMD [ "npm", "run", "start:prisma"]
