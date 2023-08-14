@@ -2,7 +2,7 @@
  This is Home Music Library service application with Node.js
  Created with: 
  Node.js 18 LTS
- NestJS 8.0
+ NestJS 10.0
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
@@ -30,7 +30,7 @@ npm install
 
 ## Running application
 
-start locally your Docker Engine
+start locally your Docker Engine, after this run:
 
 ```
 docker-compose up
