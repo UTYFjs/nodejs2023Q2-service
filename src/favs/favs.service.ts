@@ -24,14 +24,14 @@ export class FavsService {
         },
       },
     });
-    if(allFavs.length){
+    if (allFavs.length) {
       await this.prisma.favorites.create({
-          data: { id: uuidv4() },
-        });
+        data: { id: uuidv4() },
+      });
     }
     return allFavs.length
       ? allFavs[0]
-      : { artists: [], albums: [], tracks: []}
+      : { artists: [], albums: [], tracks: [] };
   }
 
   async createFav(category: CategoryType, id: string) {
