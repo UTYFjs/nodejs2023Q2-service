@@ -1,6 +1,11 @@
-# compiled output
-/dist
 /node_modules
+.git
+dist
+
+Dockerfile
+/db
+.dockerignore
+# compiled output
 .env
 # Logs
 logs
@@ -11,8 +16,8 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-/pgdata
 pglogs
+/pgdata
 
 # OS
 .DS_Store

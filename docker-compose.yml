@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:15.3-alpine3.18
+    build: ./db
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+
+    command:
+      [
+        'postgres',
+        '-c',
+        'logging_collector=on',
+        '-c',
+        'log_statement=all',
+        '-c',
+        'log_directory=/logs',
+      ]
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+      - ./pglogs:/logs
+    networks:
+      - backend
+  app:
+    container_name: app
+    build: ./
+    restart: always
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - postgres
+    environment:
+      PORT: ${PORT}
+      DATABASE_URL: ${DATABASE_URL}
+
+    volumes:
+      - .:/app
+      - node-modules:/usr/app/node_modules
+    networks:
+      - backend
+volumes:
+  logs:
+  pgdata:
+  app:
+  node-modules:
+
+networks:
+  backend:
+    driver: bridge
