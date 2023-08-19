@@ -3,11 +3,10 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
-  // HttpStatus,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { MyLoggerService } from 'src/logger/logger.service';
-//import { Response, Request } from 'express';
+import { Request } from 'express';
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
   constructor(
@@ -21,26 +20,29 @@ export class AllExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     let message: string;
     let statusCode: number;
-
+    let responseBody: any;
+    let stack: string;
     if (exception instanceof HttpException) {
       message = exception.message;
       statusCode = exception.getStatus();
+      responseBody = exception.getResponse();
+      stack = exception.stack;
       console.log('exception.getResponse()', exception.getResponse());
     } else {
       message = 'Internal Server Error';
       statusCode = 500;
+      responseBody = {
+        error: message,
+        statusCode: statusCode,
+        message: message,
+      };
     }
-    //const response = ctx.getResponse<Response>();
-    //const request = ctx.getRequest<Request>();
-
-    const messageForLogger = `type: Error, statusCode: ${statusCode}, message: ${message}, `;
-    this.logger.error(messageForLogger);
-
-    const responseBody = {
-      statusCode: statusCode,
-      timestamp: new Date().toISOString(),
-      path: httpAdapter.getRequestUrl(ctx.getRequest()),
-    };
+    const request = ctx.getRequest<Request>();
+    const { body, url, query } = request;
+    const messageForLogger = `statusCode: ${statusCode}, message: ${message}, request: {body: ${JSON.stringify(
+      body,
+    )}, query: ${JSON.stringify(query)}, url: ${url}} `;
+    this.logger.error(messageForLogger, stack);
 
     httpAdapter.reply(ctx.getResponse(), responseBody, statusCode);
   }
