@@ -11,6 +11,8 @@ export class MyLoggerService extends ConsoleLogger {
   private pathLogsFile: string;
   private pathErrorLogsFile: string;
   private maxLogFileSizeKB = +process.env.MAX_LOG_FILE_SIZE_KB || 24;
+  private logLevel =
+    +process.env.LOG_LEVEL === 0 ? 0 : +process.env.LOG_LEVEL || 2;
 
   constructor() {
     super();
@@ -27,25 +29,35 @@ export class MyLoggerService extends ConsoleLogger {
     stack?: string,
     context = 'GlobalExceptionHandler',
   ) {
-    //super.error(message, stack, context);
-    await this.saveLogs('error', message, stack, context);
+    if (this.logLevel >= 0) {
+      super.error(message, stack, context);
+      await this.saveLogs('error', message, stack, context);
+    }
   }
   warn(message: any, context?: string) {
-    super.warn(message, context);
-    this.saveLogs('warn', message, context);
+    if (this.logLevel >= 1) {
+      super.warn(message, context);
+      this.saveLogs('warn', message, context);
+    }
   }
   log(message: string, context?: string) {
-    super.log(message, context);
-    this.saveLogs('log', message, context);
+    if (this.logLevel >= 2) {
+      super.log(message, context);
+      this.saveLogs('log', message, context);
+    }
   }
 
   debug(message: any, context?: string) {
-    super.debug(message, context);
-    this.saveLogs('debug', message, context);
+    if (this.logLevel >= 3) {
+      super.debug(message, context);
+      this.saveLogs('debug', message, context);
+    }
   }
   verbose(message: any, context?: string) {
-    super.verbose(message, context);
-    this.saveLogs('verbose', message, context);
+    if (this.logLevel >= 4) {
+      super.verbose(message, context);
+      this.saveLogs('verbose', message, context);
+    }
   }
   private async saveLogs(
     logLevel: LogLevel,
