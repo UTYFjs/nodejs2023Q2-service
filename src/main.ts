@@ -24,5 +24,12 @@ async function bootstrap() {
   await app.listen(PORT, () => {
     console.log(`app start ${PORT} Port`);
   });
+  const logger = app.get(MyLoggerService);
+  process.on('uncaughtException', (err: Error) => {
+    logger.error(err.message, err.stack, 'uncaughtException');
+  });
+  process.on('unhandledRejection ', (err: Error) => {
+    logger.error(err.message, err.stack, 'unhandledRejection');
+  });
 }
 bootstrap();
