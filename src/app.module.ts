@@ -9,9 +9,10 @@ import { FavsModule } from './favs/favs.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { LoggerModule } from './logger/logger.module';
 import { LoggerMiddleware } from './middlewars/logger-middleware.middleware';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { AllExceptionFilter } from './exception-filter/exception-filter.filter';
 import { AuthModule } from './auth/auth.module';
+import { AuthGuard } from './auth/auth-guard.guard';
 
 @Module({
   imports: [
@@ -27,6 +28,10 @@ import { AuthModule } from './auth/auth.module';
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
     {
       provide: APP_FILTER,
       useClass: AllExceptionFilter,

@@ -40,7 +40,7 @@ export class AuthService {
     }
     /*const payload = { userId: user.id, login: userDto.login };
     console.log('JWT Token', this.jwtService.sign(payload));*/
-    const token = this.generateToken(user.id, userDto.login);
+    const token = await this.generateToken(user.id, userDto.login);
     return token;
   }
 
@@ -50,7 +50,7 @@ export class AuthService {
 
   private async generateToken(userId, login) {
     const payload = { userId: userId, login: login };
-    return this.jwtService.sign(payload);
+    return await this.jwtService.signAsync(payload);
   }
   /* private async validateUser(userDto: CreateUserDto) {
     //const passwordEquals = await compare(userDto.password);
