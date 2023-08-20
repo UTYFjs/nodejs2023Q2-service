@@ -29,7 +29,7 @@ import {
 } from '@nestjs/swagger';
 import { UserConstants } from 'src/constants/constants';
 
-@ApiTags('user')
+@ApiTags('user') // for tags in swagger docs
 @Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
