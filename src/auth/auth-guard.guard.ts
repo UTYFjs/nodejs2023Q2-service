@@ -24,24 +24,38 @@ export class AuthGuard implements CanActivate {
       // 💡 See this condition
       return true;
     }
-    //const response = context.switchToHttp().getResponse();
-    const request = context.switchToHttp().getRequest(); // get request from context
-    const token = this.extractTokenFromHeader(request); // get token
-    if (!token) {
-      throw new UnauthorizedException('user is not autorisation');
-    }
-    try {
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: process.env.JWT_SECRET_KEY || 'secret123123', ////   not sure what is secret? is it secret from JWT Module.register from auth module
-      });
-      // 💡 We're assigning the payload to the request object here
-      // so that we can access it in our route handlers
 
-      request['user'] = payload; // поле декодирования юсера добавляем его в реквест
-    } catch {
-      throw new UnauthorizedException('user is not autorisation');
+    //const response = context.switchToHttp().getResponse();
+    const request: Request = context.switchToHttp().getRequest(); // get request from context
+    const url = request.url;
+
+    if (url === '/auth/refresh') {
+      const refreshToken = request.body.refreshToken;
+      if (refreshToken) {
+        return true;
+      } else {
+        throw new UnauthorizedException(
+          'No refreshToken in body. should be{refreshToken: ddff}',
+        );
+      }
+    } else {
+      const token = this.extractTokenFromHeader(request); // get token
+      if (!token) {
+        throw new UnauthorizedException('user is not autorisation');
+      }
+      try {
+        const payload = await this.jwtService.verifyAsync(token, {
+          secret: process.env.JWT_SECRET_KEY || 'secret123123', ////   not sure what is secret? is it secret from JWT Module.register from auth module
+        });
+        // 💡 We're assigning the payload to the request object here
+        // so that we can access it in our route handlers
+
+        request['user'] = payload; // поле декодирования юсера добавляем его в реквест
+      } catch {
+        throw new UnauthorizedException('user is not autorisation');
+      }
+      return true; // возвращаем true если доступ разрешен
     }
-    return true; // возвращаем true если доступ разрешен
   }
   private extractTokenFromHeader(request: Request): string | undefined {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];

@@ -7,17 +7,16 @@ import { Public } from './public.decorator';
 import { RefreshAuthDto } from './dto/refresh-auth.dto';
 
 @ApiTags('auth')
-@Public()
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
+  @Public()
   @Post('signup')
   async signup(@Body() createAuthDto: CreateUserDto) {
     console.log();
     return await this.authService.signup(createAuthDto);
   }
-
+  @Public()
   @Post('login')
   login(@Body() loginAuthDto: CreateUserDto) {
     return this.authService.login(loginAuthDto);

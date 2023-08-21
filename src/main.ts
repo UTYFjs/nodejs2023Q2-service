@@ -31,5 +31,17 @@ async function bootstrap() {
   process.on('unhandledRejection ', (err: Error) => {
     logger.error(err.message, err.stack, 'unhandledRejection');
   });
+  /*
+  Promise.reject(new Error('Ошибка в промисе'));
+
+  (async () => {
+    throw new Error('Ошибка в асинхронной функции');
+  })();
+
+  const newF = async () => {
+    throw new Error('ошибка');
+  };
+  newF();
+  throw new Error();*/
 }
 bootstrap();
