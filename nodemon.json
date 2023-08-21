@@ -1,0 +1,14 @@
+{
+  "ignore": [
+    "node_modules",
+    "pgdata"
+  ],
+  "ext": "ts",
+  "watch": [
+    "./src"
+  ],
+  "exec": "npm run start:dev",
+  "execMap": {
+    "ts": "ts-node"
+  }
+}
