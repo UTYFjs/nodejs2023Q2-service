@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from './public.decorator';
+import { RefreshAuthDto } from './dto/refresh-auth.dto';
 
 @ApiTags('auth')
 @Public()
@@ -13,6 +14,7 @@ export class AuthController {
 
   @Post('signup')
   async signup(@Body() createAuthDto: CreateUserDto) {
+    console.log();
     return await this.authService.signup(createAuthDto);
   }
 
@@ -22,7 +24,7 @@ export class AuthController {
   }
 
   @Post('refresh')
-  refresh(@Body() refreshAuthDto: string) {
+  refresh(@Body() refreshAuthDto: RefreshAuthDto) {
     return this.authService.refresh(refreshAuthDto);
   }
 }

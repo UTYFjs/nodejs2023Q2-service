@@ -51,6 +51,8 @@ export const enum UserConstants {
   GET_ALL_SUMMARY = 'Get all users',
   FORBIDDEN_MESSAGE = 'Old password is wrong',
   FORBIDDEN_USER_LOGIN = 'Login or password is wrong',
+  FORBIDDEN_REFRESH_TOKEN = 'Refresh token is invalid or expired',
+  INVALID_REFRESH_TOKEN = 'Refresh token is invalid',
 }
 export const enum FavsConstants {
   NOT_FOUND_MESSAGE = 'This item is not favorites',

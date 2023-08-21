@@ -6,6 +6,7 @@ import { UsersService } from 'src/users/users.service';
 import { hash, compare } from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserConstants } from 'src/constants/constants';
+import { RefreshAuthDto } from './dto/refresh-auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,7 @@ export class AuthService {
     private prisma: PrismaService,
   ) {}
   async signup(userDto: CreateUserDto) {
-    const hashPassword = await hash(userDto.password, 10);
+    const hashPassword = await hash(userDto.password, +process.env.CRYPT_SALT);
     const user = await this.userService.create({
       ...userDto,
       password: hashPassword,
@@ -36,14 +37,34 @@ export class AuthService {
     }
   }
 
-  refresh(refreshAuthDto: string) {
-    return `This action returns ${refreshAuthDto} new refresh token`;
+  async refresh(refreshAuthDto: RefreshAuthDto) {
+    try {
+      const { userId, login } = await this.jwtService.verifyAsync(
+        refreshAuthDto.refreshToken,
+        {
+          secret: process.env.JWT_SECRET_REFRESH_KEY || 'secret', ////   not sure what is secret? is it secret from JWT Module.register from auth module
+        },
+      );
+      if (userId && login) {
+        const tokens = this.generateToken(userId, login);
+        return tokens;
+      } else {
+        throw new ForbiddenException(UserConstants.INVALID_REFRESH_TOKEN);
+      }
+    } catch {
+      throw new ForbiddenException(UserConstants.FORBIDDEN_REFRESH_TOKEN);
+    }
   }
 
   private async generateToken(userId: string, login: string) {
     const payload = { userId, login };
+    console.log(payload);
     return {
-      accessToken: this.jwtService.sign(payload),
+      accessToken: await this.jwtService.signAsync(payload),
+      refreshToken: await this.jwtService.signAsync(payload, {
+        secret: process.env.JWT_SECRET_REFRESH_KEY,
+        expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME,
+      }),
     };
   }
 }
