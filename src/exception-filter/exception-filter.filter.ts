@@ -41,7 +41,7 @@ export class AllExceptionFilter implements ExceptionFilter {
     const messageForLogger = `statusCode: ${statusCode}, message: ${message}, request: {body: ${JSON.stringify(
       body,
     )}, query: ${JSON.stringify(query)}, url: ${url}} `;
-    this.logger.error(messageForLogger, stack);
+    this.logger.error(messageForLogger, stack, 'GlobalExceptionHandler');
 
     httpAdapter.reply(ctx.getResponse(), responseBody, statusCode);
   }

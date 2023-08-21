@@ -10,10 +10,7 @@ services:
       - .env
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+
     command:
       [
         'postgres',
@@ -22,14 +19,39 @@ services:
         '-c',
         'log_statement=all',
         '-c',
-        'log_directory=/logs',
+        'log_directory=/var/lib/postgresql/data/logs',
       ]
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
-      - ./pglogs:/logs
+      - pgdata:/var/lib/postgresql/data
 
+    networks:
+      - backend
+  app:
+    container_name: app
+    build: ./
+    restart: always
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - postgres
+    environment:
+      PORT: ${PORT}
+      DATABASE_URL: ${DATABASE_URL}
+
+    volumes:
+      - ./src:/app/src
+      - ./nestLogs:/app/nestLogs
+    networks:
+      - backend
 volumes:
+  pglogs:
+    driver: local
   pgdata:
-  logs:
+    driver: local
+  nestLogs:
+  app:
+  node-modules:
 
-
+networks:
+  backend:
+    driver: bridge

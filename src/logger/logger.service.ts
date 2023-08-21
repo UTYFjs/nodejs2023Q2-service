@@ -24,14 +24,10 @@ export class MyLoggerService extends ConsoleLogger {
     } catch {}
   }
 
-  async error(
-    message: string,
-    stack?: string,
-    context = 'GlobalExceptionHandler',
-  ) {
+  async error(message: string, stack?: string, context?: string) {
     if (this.logLevel >= 0) {
       super.error(message, stack, context);
-      await this.saveLogs('error', message, stack, context);
+      await this.saveLogs('error', message, context, stack);
     }
   }
   warn(message: any, context?: string) {
@@ -62,8 +58,8 @@ export class MyLoggerService extends ConsoleLogger {
   private async saveLogs(
     logLevel: LogLevel,
     message: string,
-    stack?: string,
     context?: string,
+    stack?: string,
   ) {
     const messageForLogger = `LogLevel: [${logLevel}], context: [${context}], ${message}, stack: ${stack}`;
 
