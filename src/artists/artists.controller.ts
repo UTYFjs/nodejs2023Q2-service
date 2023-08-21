@@ -20,6 +20,7 @@ import {
   ApiOperation,
   ApiParam,
   ApiCreatedResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { ArtistsService } from './artists.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -28,6 +29,7 @@ import { Artist } from './entities/artist.entity';
 import { ArtistConstants, ErrorType } from 'src/constants/constants';
 
 @ApiTags('artist')
+@ApiBearerAuth()
 @Controller('artist')
 export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}

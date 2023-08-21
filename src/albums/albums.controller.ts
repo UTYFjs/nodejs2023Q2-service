@@ -24,10 +24,12 @@ import {
   ApiOperation,
   ApiParam,
   ApiCreatedResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { AlbumConstants, ErrorType } from 'src/constants/constants';
 
 @ApiTags('album')
+@ApiBearerAuth()
 @Controller('album')
 export class AlbumsController {
   constructor(private readonly albumsService: AlbumsService) {}

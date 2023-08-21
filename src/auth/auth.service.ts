@@ -5,7 +5,7 @@ import { UsersService } from 'src/users/users.service';
 
 import { hash, compare } from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UserConstants } from 'src/constants/constants';
+import { AuthConstants, UserConstants } from 'src/constants/constants';
 import { RefreshAuthDto } from './dto/refresh-auth.dto';
 
 @Injectable()
@@ -52,10 +52,10 @@ export class AuthService {
         const tokens = this.generateToken(userId, login);
         return tokens;
       } else {
-        throw new ForbiddenException(UserConstants.INVALID_REFRESH_TOKEN);
+        throw new ForbiddenException(AuthConstants.INVALID_REFRESH_TOKEN);
       }
     } catch {
-      throw new ForbiddenException(UserConstants.FORBIDDEN_REFRESH_TOKEN);
+      throw new ForbiddenException(AuthConstants.FORBIDDEN_REFRESH_TOKEN);
     }
   }
 

@@ -26,10 +26,12 @@ import {
   ApiParam,
   ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { UserConstants } from 'src/constants/constants';
 
 @ApiTags('user') // for tags in swagger docs
+@ApiBearerAuth()
 @Controller('user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

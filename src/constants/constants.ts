@@ -51,6 +51,14 @@ export const enum UserConstants {
   GET_ALL_SUMMARY = 'Get all users',
   FORBIDDEN_MESSAGE = 'Old password is wrong',
   FORBIDDEN_USER_LOGIN = 'Login or password is wrong',
+}
+export const enum AuthConstants {
+  SIGNUP_SUMMARY = 'Sign up',
+  LOGIN_SUMMARY = 'Login',
+  REFRESH_SUMMARY = 'Refresh token',
+  OK_MESSAGE = 'Successful',
+  BAD_REQUEST_AUTH_MESSAGE = 'Request body does not contains required fields',
+  FORBIDDEN_LOGIN = 'Login or passwors is invalid',
   FORBIDDEN_REFRESH_TOKEN = 'Refresh token is invalid or expired',
   INVALID_REFRESH_TOKEN = 'Refresh token is invalid',
 }

@@ -16,6 +16,7 @@ import { Track } from './entities/track.entity';
 import { StatusCodes } from 'http-status-codes';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
   ApiNoContentResponse,
@@ -28,6 +29,7 @@ import {
 import { ErrorType, TrackConstants } from 'src/constants/constants';
 
 @ApiTags('track')
+@ApiBearerAuth()
 @Controller('track')
 export class TracksController {
   constructor(private readonly tracksService: TracksService) {}

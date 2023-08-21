@@ -14,7 +14,13 @@ async function bootstrap() {
   app.useLogger(new MyLoggerService());
 
   const config = new DocumentBuilder()
+    .addBearerAuth({
+      type: 'http',
+      description:
+        'Paste here your valid access token. For get access token -> sighup -> login (with login and password) -> get access and refresh token',
+    })
     .setTitle('Home Library Service')
+    .addTag('auth')
     .setDescription('Home music library service')
     .setVersion('1.0.0')
     .build();

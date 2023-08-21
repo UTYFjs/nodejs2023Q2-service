@@ -14,6 +14,7 @@ import { StatusCodes } from 'http-status-codes';
 import { CategoryType, Fav } from './entities/fav.entity';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -26,6 +27,7 @@ import {
 import { ErrorType, FavsConstants } from 'src/constants/constants';
 
 @ApiTags('favs')
+@ApiBearerAuth()
 @Controller('favs')
 export class FavsController {
   constructor(private readonly favsService: FavsService) {}
