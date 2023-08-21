@@ -16,14 +16,8 @@ export class AuthService {
     private prisma: PrismaService,
   ) {}
   async signup(userDto: CreateUserDto) {
-    const hashPassword = await hash(
-      userDto.password,
-      +process.env.CRYPT_SALT || 10,
-    );
-    const user = await this.userService.create({
-      ...userDto,
-      password: hashPassword,
-    });
+    const user = await this.userService.create(userDto);
+    console.log('user', user);
     return user;
   }
 

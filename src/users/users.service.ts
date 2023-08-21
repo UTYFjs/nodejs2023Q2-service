@@ -9,14 +9,20 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserConstants } from 'src/constants/constants';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from './entities/user.entity';
+import { compare, hash } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
   async create(dto: CreateUserDto) {
+    const hashPassword = await hash(
+      dto.password,
+      +process.env.CRYPT_SALT || 10,
+    );
+
     const newUser = {
       login: dto.login,
-      password: dto.password,
+      password: hashPassword,
     };
     const createdUser = await this.prisma.user.create({ data: newUser });
     return new User({
@@ -55,11 +61,22 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException(UserConstants.NOT_FOUND_MESSAGE);
     }
-    if (user.password !== updateUserDto.oldPassword) {
+    const isPasswordEqual = await compare(
+      updateUserDto.oldPassword,
+      user.password,
+    );
+    if (!isPasswordEqual) {
       throw new ForbiddenException(UserConstants.FORBIDDEN_MESSAGE);
     }
+    const hashedNewPassword = await hash(
+      updateUserDto.newPassword,
+      +process.env.CRYPT_SALT || 10,
+    );
     const updatedUser = await this.prisma.user.update({
-      data: { password: updateUserDto.newPassword, version: user.version + 1 },
+      data: {
+        password: hashedNewPassword,
+        version: user.version + 1,
+      },
       where: { id: id },
     });
     if (!updatedUser) {
