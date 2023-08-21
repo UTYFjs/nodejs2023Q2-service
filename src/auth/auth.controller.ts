@@ -13,7 +13,6 @@ export class AuthController {
   @Public()
   @Post('signup')
   async signup(@Body() createAuthDto: CreateUserDto) {
-    console.log();
     return await this.authService.signup(createAuthDto);
   }
   @Public()

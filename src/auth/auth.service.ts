@@ -16,7 +16,10 @@ export class AuthService {
     private prisma: PrismaService,
   ) {}
   async signup(userDto: CreateUserDto) {
-    const hashPassword = await hash(userDto.password, +process.env.CRYPT_SALT);
+    const hashPassword = await hash(
+      userDto.password,
+      +process.env.CRYPT_SALT || 10,
+    );
     const user = await this.userService.create({
       ...userDto,
       password: hashPassword,
@@ -58,7 +61,6 @@ export class AuthService {
 
   private async generateToken(userId: string, login: string) {
     const payload = { userId, login };
-    console.log(payload);
     return {
       accessToken: await this.jwtService.signAsync(payload),
       refreshToken: await this.jwtService.signAsync(payload, {
