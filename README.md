@@ -17,7 +17,7 @@ git clone https://github.com/UTYFjs/nodejs2023Q2-service.git
 ```
 2. Move to docker-db-orm branch
 ```
-git checkout docker-db-orm
+git checkout auth-logging
 ```
 
 3. Copy `.env.example` file in root of the project and rename to `.env`
@@ -41,6 +41,35 @@ After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
+## Testing
+
+After application running by 'docker-compose up' open new terminal and enter:
+
+
+To run all test with authorization
+
+```
+npm run test:auth
+```
+
+To run only specific test suite with authorization
+
+```
+npm run test:auth -- <path to suite>
+```
+
+## for Check refresh Token
+
+- open Postman or http://localhost:4000/doc/
+
+create request to http://localhost:4000/auth/refresh
+
+pass to body {refreshToken: "Here write real refreshToken from http://localhost:4000/auth/login"}
+ send request
+  get new accessToken and refreshToken from response
+
+
+
 ## Scan Vulnerabilities
 After build images by command 'docker-compose up'  
 
@@ -54,37 +83,7 @@ After build images by command 'docker-compose up'
   npm run docker:scan:db
   ```
 
-## Testing
 
-After application running by 'docker-compose up' open new terminal and enter:
-
-To run all tests without authorization
-
-```
-npm run test
-```
-also you can run all tests without authorization inside container 
-```
-npm run test:insidecontainer
-```
-
-To run only one of all test suites
-
-```
-npm run test -- <path to suite>
-```
-
-To run all test with authorization
-
-```
-npm run test:auth
-```
-
-To run only specific test suite with authorization
-
-```
-npm run test:auth -- <path to suite>
-```
 
 ### Auto-fix and format
 
