@@ -24,11 +24,11 @@ export class AuthGuard implements CanActivate {
       // 💡 See this condition
       return true;
     }
-
+    //const response = context.switchToHttp().getResponse();
     const request = context.switchToHttp().getRequest(); // get request from context
     const token = this.extractTokenFromHeader(request); // get token
     if (!token) {
-      throw new UnauthorizedException('user is not autorisation');
+      throw new UnauthorizedException('user is not autorisation222');
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
@@ -38,7 +38,7 @@ export class AuthGuard implements CanActivate {
       // so that we can access it in our route handlers
       request['user'] = payload; // поле декодирования юсера добавляем его в реквест
     } catch {
-      throw new UnauthorizedException('user is not autorisation');
+      throw new UnauthorizedException('user is not autorisation11');
     }
     return true; // возвращаем true если доступ разрешен
   }

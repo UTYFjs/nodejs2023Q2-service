@@ -15,18 +15,12 @@ export class AuthService {
     private prisma: PrismaService,
   ) {}
   async signup(userDto: CreateUserDto) {
-    //const findUser = await this.userService.findOne({});
     const hashPassword = await hash(userDto.password, 10);
-    //console.log('user Auth', hashPassword);
     const user = await this.userService.create({
       ...userDto,
       password: hashPassword,
     });
-    console.log('user Auth', user);
-
-    return `This action adds a new signup user ${JSON.stringify(
-      userDto,
-    )}, hashpassword: ${hashPassword}`;
+    return user;
   }
 
   async login(userDto: CreateUserDto) {
@@ -35,24 +29,21 @@ export class AuthService {
     });
     const isPasswordEqual = await compare(userDto.password, user.password);
     if (user && isPasswordEqual) {
+      const token = await this.generateToken(user.id, userDto.login);
+      return token;
     } else {
       throw new ForbiddenException(UserConstants.FORBIDDEN_USER_LOGIN);
     }
-    /*const payload = { userId: user.id, login: userDto.login };
-    console.log('JWT Token', this.jwtService.sign(payload));*/
-    const token = await this.generateToken(user.id, userDto.login);
-    return token;
   }
 
   refresh(refreshAuthDto: string) {
     return `This action returns ${refreshAuthDto} new refresh token`;
   }
 
-  private async generateToken(userId, login) {
-    const payload = { userId: userId, login: login };
-    return await this.jwtService.signAsync(payload);
+  private async generateToken(userId: string, login: string) {
+    const payload = { userId, login };
+    return {
+      accessToken: this.jwtService.sign(payload),
+    };
   }
-  /* private async validateUser(userDto: CreateUserDto) {
-    //const passwordEquals = await compare(userDto.password);
-  }*/
 }

@@ -50,7 +50,7 @@ export const enum UserConstants {
   GET_ONE_SUMMARY = 'Get one user with specific Id',
   GET_ALL_SUMMARY = 'Get all users',
   FORBIDDEN_MESSAGE = 'Old password is wrong',
-  FORBIDDEN_USER_LOGIN = 'Logen or password is wrong',
+  FORBIDDEN_USER_LOGIN = 'Login or password is wrong',
 }
 export const enum FavsConstants {
   NOT_FOUND_MESSAGE = 'This item is not favorites',
